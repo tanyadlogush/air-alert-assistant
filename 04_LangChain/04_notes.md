@@ -38,4 +38,25 @@ Operate using `SystemMessage`, `HumanMessage`, and `AIMessage`.
   - Integrates seamlessly into LCEL execution chains.
 
 
-`pip install langchain-qdrant`
+
+## Block 3: LCEL RAG Pipeline
+
+- RAG retrieves relevant context and gives it to the LLM together with the user's question.
+- RunnableParallel creates multiple branches from the same input.
+- context = retriever | format_docs retrieves and formats relevant documents.
+- RunnablePassthrough() forwards the original input unchanged.
+- RunnableParallel produces a dictionary containing context and question.
+- ChatPromptTemplate maps these values to system and user messages.
+- system and user are message roles; context and question are their values.
+- StrOutputParser() converts the LLM output into a plain string.
+
+
+**_Data Flow:_**
+
+    question → ┬ → retriever → format_docs → context ─┐
+    
+               │                                        ├→ {context, question} → Prompt → LLM → StrOutputParser → answer
+               
+               └ → RunnablePassthrough → question ─────┘
+
+
