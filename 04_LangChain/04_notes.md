@@ -60,3 +60,22 @@ Operate using `SystemMessage`, `HumanMessage`, and `AIMessage`.
                └ → RunnablePassthrough → question ─────┘
 
 
+
+## Block 4: Chat History & RAG Memory Mechanics
+
+### Core Concepts
+- **Stateless Nature of LLMs**: LLMs do not retain memory across API calls. 
+Conversational context relies on sending the full message list (`[system, human, ai, human...]`) 
+in every payload.
+- **RAG Multi-Turn Challenge**: Standalone user queries with implicit references 
+(e.g., *"What if I am outside?"*) fail in vector search because key domain keywords 
+from previous turns are missing.
+
+- **Two-Step Conversational RAG Pipeline**:
+  1. **History-Aware Rewriting**: Uses an LLM to transform the chat history + latest user query into a single, 
+  standalone search query.
+  2. **RAG Execution**: Passes the reformulated query to the retriever to fetch context, 
+  then generates the answer via the QA prompt.
+- **LangChain Deprecation Note**: Legacy abstractions 
+(`RunnableWithMessageHistory`, `InMemoryChatMessageHistory`) are deprecated in favor 
+of **LangGraph state persistence (`Checkpointer`)**.
