@@ -79,3 +79,40 @@ from previous turns are missing.
 - **LangChain Deprecation Note**: Legacy abstractions 
 (`RunnableWithMessageHistory`, `InMemoryChatMessageHistory`) are deprecated in favor 
 of **LangGraph state persistence (`Checkpointer`)**.
+
+
+## Block 5: LangChain: Tools and Agents
+
+### `@tool`
+
+* Converts a Python function into a LangChain tool.
+* Type hints define parameter types.
+* The docstring describes the tool's purpose and helps the model decide when to use it.
+
+### Providing tools to an agent
+
+```python
+tools = [search_documents, get_air_alert_status]
+
+agent = create_agent(
+    model=llm,
+    tools=tools,
+    system_prompt="You are an assistant."
+)
+```
+
+The `tools` list contains all tools available to the agent.
+
+### Tool-calling flow
+
+1. The model receives tool descriptions and argument schemas.
+2. The model selects a tool and generates a tool call with arguments.
+3. The application executes the function through the agent mechanism.
+4. The result is returned to the model, which can respond or request another tool.
+
+**Key distinction:** The model selects the tool; the application executes it.
+
+### Token usage
+
+Tool names, descriptions, and argument schemas can increase input token usage. Keep descriptions concise, 
+precise, and informative.
