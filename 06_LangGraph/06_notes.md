@@ -50,3 +50,20 @@ A node read data from State —> A node performs an operation —> returns updat
 - Three attempts = one initial **search + (N-1)** retries.
 
 ## Tools & Agents in a LangGraph
+- **Tool calling:** The `LLM` selects an available tool and provides arguments. 
+`ToolNode` executes it and returns The result to the State for the LLM to use.
+- **LangGraph**: `ToolNode` handles tool execution; 
+`tools_condition` routes execution based on whether the LLM requests a tool or is ready to respond.
+- An agent uses an `LLM` to choose its next action, including calling an available tool. 
+`ToolNode `executes tools, and their results are added to `MessagesState.messages` 
+so the `LLM` can use them in subsequent steps. 
+`tools_condition` routes execution to a tool or ends the agent f? flow
+
+Notes:
+- `@tool` converts a Python function into a tool.
+- `bind_tools()` provides tools to the model.
+- `ToolNode` executes tool calls.
+- `tools_condition` handles routing.
+- `MessagesState` stores message history.
+- `ToolMessage` contains tool execution results.
+- The LLM–Tools loop supports multiple tool calls
