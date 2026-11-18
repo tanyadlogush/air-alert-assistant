@@ -67,3 +67,23 @@ Notes:
 - `MessagesState` stores message history.
 - `ToolMessage` contains tool execution results.
 - The LLM–Tools loop supports multiple tool calls
+
+
+## Checkpoints, Persistance & Recovery
+
+- **Checkpointers** save graph state snapshots.
+- `thread_id` identifies an execution thread.
+- `get_state()` retrieves the current snapshot.
+- `get_state_history()` retrieves snapshot history.
+- `values` contains the State; `next` contains pending nodes.
+- `InMemorySaver` is temporary; `SQLite`/`PostgreSQL` provide persistent storage.
+
+
+
+## HITL (Human-in-the-loop)
+- HITL pauses graph execution for human input or approval.
+- `interrupt(value)` pauses graph and exposes data for review.
+- `Command(resume=value)` resumes the graph with the human response.
+- The interrupted node restarts from the beginning when resumed.
+- Human input can be stored in State and used by subsequent nodes.
+- Resuming requires a checkpointer and the same `thread_id`.
